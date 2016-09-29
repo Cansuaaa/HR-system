@@ -1,0 +1,62 @@
+{% include "./common/header.twig" %}
+
+<div class="content">
+    <div class="container">
+        <div class="row">
+            <div class="panel">
+                <div class="panel-body">
+
+                    <!-- LogTime Form -->
+
+                    <div class="col-lg-4 col-lg-offset-4">
+                        <form method="POST" id="logTimeForm">
+                            <div class="form-group">
+                                <label for="duration">Hours:</label>
+                                <input id="duration" name="duration" class="form-control" type="number" max="12" min="1" placeholder="Duration" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="datetimepicker">Date:</label>
+                                <input id="calendar-date" name="calendar-date" class="form-control" type='text' placeholder="dd/mm/yyyy" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="project">Select project:</label>
+                                <select class="form-control" name="project-id" id="project-id" required>
+                                    {% for opt in content %}
+                                        <option value="{{opt.id}}">
+                                            {{opt.project}}
+                                        </option>
+                                    {% endfor %}
+                                </select>
+                            </div>
+                            <input id="submitLogTime" class="btn btn-primary btn-filled" type="submit" value="Submit">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div><!-- end row -->
+        <div class="row">
+            <!-- LOGTIME TABLE -->
+            <div class="panel">
+                <div class="panel-body">
+                    <table class="table table-striped" id="logtimeTable">
+                        <tr>
+                            <th>Project</th>
+                            <th>Time</th>
+                            <th>Date</th>
+                            <th>Action</th>
+                        </tr>
+                        {% for row in contentTable %}
+                            <tr id="{{row.id}}">
+                                <td>{{row.project}}</td>
+                                <td>{{row.time}}</td>
+                                <td>{{row.date}}</td>
+                                <td><input id="btn{{row.id}}" class="login-btn btn-filled btn-danger btn delete" type="submit" value="Delete"></td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+                </div>
+            </div>
+        </div><!-- end row -->
+    </div>
+
+    {% include "common/footer.twig" %}

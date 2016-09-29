@@ -1,0 +1,385 @@
+{% include "/common/header.twig" %}
+<style>
+    .imgCaption{
+        position: relative;
+        bottom: 24px;
+        float: left;
+
+    }
+    .imgCaption a{
+        font-size: 1.5em;
+    }
+    @media(max-width: 990px) {
+        .imgCaption a{
+            font-size: 1.5em;
+        }
+    }
+</style>
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 card-box">
+                    <div class="profile-info-name">
+                        <div class="col-md-2 hover" id="figureMyAccount">
+                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                <img id="profileImage" style="overflow: hidden;" class="hover col-md-12 img-responsive img-rounded" src="/assets/images/photo.jpg">
+                            </div>
+                            <div id="figureInfo" class="hover imgCaption col-sm-12 col-md-12">
+                                <a href="#" >
+									<label for='uploadAccountPic' style='cursor: pointer! important' class="fa fa-camera" aria-hidden="true"></label>
+                                    <input id='uploadAccountPic' style='display: none' type='file'/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="clearfix"></div>
+                    </div>
+                </div>
+                <!-- end: panel body -->
+            </div> <!-- end panel -->
+            <div class="panel">
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button onclick="showAddExperienceContainer()" id="addItemToTableExperience" class="col-md-12 btn btn-primary waves-effect waves-light">{{ languages.add_new_experience }} <i class="fa fa-plus"></i></button>
+
+                        </div>
+                        <form method="post" id="addNewExperienceForm">
+                            <div id="addNewExperienceContainer">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <h2>{{ languages.experience }}</h2>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h2 id="messageWrongExperience"></h2>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-7">
+                                    <div class="col-md-12 belowTitle"></div>
+                                    <div class="col-md-12 heightLabel">{{ languages.company_name }} <span class="red">*</span></div>
+                                    <div class="col-md-10 heightBelow">
+                                        <input type="text" class="form-control" name="experienceCompanyName" id="experienceCompanyName" placeholder="{{ languages.name }}..">
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.title }} <span class="red">*</span></div>
+                                    <div class="col-md-10 heightBelow">
+                                        <input type="text" class="form-control" name="experienceTitle" id="experienceTitle" placeholder="{{ languages.title }}..">
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.location }} <span class="red">*</span></div>
+                                    <div class="col-md-10 heightBelow">
+                                        <input type="text" class="form-control" name="locationExperience" id="locationExperience" placeholder="{{ languages.location }}..">
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.time_period }} <span class="red">*</span></div>
+                                    <div class="col-md-12">{{ languages.from }}:</div>
+                                    <div class="col-md-5 heightBelow">
+                                        <select name="experienceMonthFrom" id="experienceMonthFrom" class="form-control">
+                                            <option hidden>{{ languages.month }}</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5 heightBelow">
+                                        <select name="experienceYearFrom" id="experienceYearFrom" class="form-control">
+                                            <option value="" hidden>{{ languages.year }}</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12">{{ languages.to }}:</div>
+                                    <div class="col-md-5 heightBelow">
+                                        <select name="experienceMonthTo" id="experienceMonthTo" class="form-control">
+                                            <option hidden>{{ languages.month }}</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5 heightBelow">
+                                        <select name="experienceYearTo" id="experienceYearTo" class="form-control">
+                                            <option value="" hidden>{{ languages.year }}</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.description }}</div>
+                                    <div class="col-md-10 heightBelow">
+                                        <textarea type="text" name="descriptionExperience" id="descriptionExperience" class="form-control col-md-12"></textarea>
+                                    </div>
+                                    <div class="belowTitle col-md-12"></div>
+                                    <div class="col-md-8">
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button type="submit" id="btnAddNewExperience" class="form-control btn btn-primary waves-effect waves-light">{{ languages.add }} <i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="addNewSkillContainer">
+                            <div class="col-md-12">
+                                <h2>{{ languages.experience }}</h2>
+                            </div>
+                            <div class="form-group col-md-12" id="newExperienceContainer">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button onclick="showAddNewSkillContainer()" id="addItemToTable" class="col-md-12 btn btn-primary waves-effect waves-light">{{ languages.add_new_skill }} <i class="fa fa-plus"></i></button>
+                        </div>
+                        <form method="post" id="formNewSkills">
+                            <div id="addNewSkillContainer">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <h2>{{ languages.program_skills }}</h2>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <h2 id="messageWrong"></h2>
+                                    </div>
+                                </div>
+                                <div class="form-group col-md-7" >
+                                    <div class="col-md-12">
+                                        <div class="col-md-12">
+                                            <p>{{ languages.add_remove }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12 belowTitle"></div>
+                                    <div class="col-lg-12">
+                                        <div class="col-md-5">{{ languages.program_language }} <span class="red"> *</span></div>
+                                        <div class="col-md-7">{{ languages.experience }} <span class="red"> *</span></div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="addProgramLanguage" id="addNewSkill" placeholder="{{ languages.program_language }}..">
+                                        </div>
+                                        <div class="col-md-5">
+                                            <input type="text" class="form-control" name="experienceInTime" id="addNewExperiance" placeholder="{{ languages.year }}..">
+                                        </div>
+                                        <div class="col-lg-2">
+                                            <button id="btnAddNewSkill" class="form-control btn btn-primary waves-effect waves-light">{{ languages.add }} <i class="fa fa-plus"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="addNewSkillContainer">
+                            <div class="col-md-12">
+                                <h2>{{ languages.skills }}</h2>
+                            </div>
+                            <div class="form-group col-md-11" id="newSkillContainer">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="col-md-12">
+                            <button onclick="showAddTimeToNewProjectContainer()" id="addTimeToNewProject" class="col-md-12 btn btn-primary waves-effect waves-light">{{ languages.add_new_project }} <i class="fa fa-plus"></i></button>
+                        </div>
+                        <form method="POST" id="addNewProjectForm">
+                            <div id="addTimeToNewProjectContainer">
+                                <div class="col-md-12">
+                                    <div class="col-md-4">
+                                        <h2>{{ languages.projects }}</h2>
+                                    </div>
+                                    <div class="col-md-8">
+                                        <div class="col-md-12">
+                                            <h2 id="messageWrongProject"></h2>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-12 belowTitle"></div>
+                                <div class="col-lg-7">
+                                    <div class="col-md-12 heightLabel">{{ languages.name }} <span class="red">*</span></div>
+                                    <div class="col-md-10 heightBelow">
+                                        <input type="text" class="form-control" name="projectName" id="projectName" placeholder="{{ languages.name }}">
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.date }} <span class="red">*</span></div>
+                                    <div class="col-md-5">
+                                        <select name="projectMonth" id="projectMonth" class="form-control">
+                                            <option hidden>{{ languages.month }}</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                            <option value="6">6</option>
+                                            <option value="7">7</option>
+                                            <option value="8">8</option>
+                                            <option value="9">9</option>
+                                            <option value="10">10</option>
+                                            <option value="11">11</option>
+                                            <option value="12">12</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-5 heightBelow">
+                                        <select name="projectYear" id="projectYear" class="form-control">
+                                            <option value="" hidden>{{ languages.year }}</option>
+                                            <option value="2014">2014</option>
+                                            <option value="2015">2015</option>
+                                            <option value="2016">2016</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-2"></div>
+                                    <div class="col-md-12 heightLabel">{{ languages.project }} URL <span class="red">*</span></div>
+                                    <div class="col-md-10 heightBelow">
+                                        <input type="text" name="projectURL" id="projectURL" class="form-control" placeholder="http://...">
+                                    </div>
+                                    <div class="col-md-12 heightLabel">{{ languages.description }}</div>
+                                    <div class="col-md-10">
+                                        <textarea type="text" name="description" id="description" class="form-control col-md-12"></textarea>
+                                    </div>
+                                    <div class="belowTitle col-md-12"></div>
+                                    <div class="col-md-8">
+                                    </div>
+                                    <div class="col-md-2">
+                                        <button id="btnAddNewProject" class="form-control btn btn-primary waves-effect waves-light">{{ languages.add }} <i class="fa fa-plus"></i></button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div id="addNewSkillContainer">
+                            <div class="col-md-12">
+                                <h2>{{ languages.projects }}</h2>
+                            </div>
+                            <div class="form-group col-md-12" id="newProjectsContainer">
+                            </div>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+<div id="removeBackgroundText" class="notesBackgroundText">
+    <section class="panel-info panel-color" style="border-radius: 10px">
+        <header class="panel-heading">
+            <h2 class="panel-title">{{ languages.are_you_sure_del }}</h2>
+        </header>
+        <div class="row m-t-20">
+            <div class="col-md-12 text-right" style="padding: 0px 20px 15px">
+                <div class="col-md-8">
+                    <div id=""></div>
+                </div>
+                <div class="col-md-4">
+                    <button id="acceptDelete" class="btn btn-primary waves-effect waves-light">{{ languages.confirm }}</button>
+                    <button id="cancelDelete" class="btn btn-default waves-effect">{{ languages.cancel }}</button>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+<div id="notesBackgroundResources"></div>
+<div id="removeItemMyAccount" class="affterNoteSuccess">{{ message }}</div>
+<div id="addedItemMyAccount" class="affterNoteSuccess">{{ message }}</div>
+<div id="updatedItemMyAccount" class="affterNoteSuccess">{{ message }}</div>
+<div style="height: 300px;"></div>
+{% include "/common/footer.twig" %}

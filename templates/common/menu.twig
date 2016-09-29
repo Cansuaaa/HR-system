@@ -1,0 +1,91 @@
+<div class="left side-menu">
+    <div class="sidebar-inner slimscrollleft">
+        <!-- User -->
+        <div class="user-box">
+            <div class="user-img">
+                <img src="/assets/images/photo.jpg" alt="user-img" class="img-circle img-thumbnail img-responsive">
+                <div class="user-status offline"><i class="zmdi zmdi-dot-circle"></i></div>
+            </div>
+            <h5><a href="/dashboard">Kinguin Juniors</a></h5>
+            <ul class="list-inline">
+                <li>
+                    <a href="/settings" >
+                        <i class="zmdi zmdi-settings"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout" class="text-custom">
+                        <i class="zmdi zmdi-power"></i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/language/en" id="setLanguageEn">
+                        <i >
+                            <img class="images" src="https://upload.wikimedia.org/wikipedia/commons/1/17/Union_flag_1606_(Kings_Colors).svg" alt="">
+                        </i>
+                    </a>
+                </li>
+                <li>
+                    <a href="/language/bg" id="setLanguageBg">
+                        <i >
+                            <img class="images" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9a/Flag_of_Bulgaria.svg/2000px-Flag_of_Bulgaria.svg.png" alt="">
+                        </i>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <!-- End User -->
+
+        <!--- Sidemenu -->
+        <div id="sidebar-menu">
+            <ul>
+                <li class="text-muted menu-title">{{ languages.Navigation }}</li>
+
+                <li>
+                    <a href="/" class="waves-effect"><i class="zmdi zmdi-view-dashboard"></i> <span> {{ languages.Dashboard }} </span> </a>
+                </li>
+                <li>
+                    <a href="/myAccountPage" class="waves-effect "><i class="zmdi zmdi-view-dashboard"></i> <span> {{ languages.my_account }} </span> </a>
+                </li>
+                <li class="has_sub">
+                    <a href="/addTime" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span class="label label-warning pull-right"></span><span>{{ languages.add_time_to_project }}</span></a>
+                </li>
+                <li class="has_sub">
+                    <a href="/projects" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span class="label label-warning pull-right"></span><span>{{ languages.menu_projects }}</span></a>
+                </li>
+                <li class="has_sub">
+                    <a href="/usersManager" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span class="label label-warning pull-right"></span><span>{{ languages.menu_users_manager }}</span></a>
+                </li>
+                <li class="has_sub">
+                    <a href="/ACLRolePermissions" class="waves-effect"><i class="zmdi zmdi-view-list"></i> <span>{{ languages.acl_role_permissions }}</span></a>
+                </li>
+                <li class="has_sub">
+                    <a href="/calendar" class="waves-effect"><i class="zmdi zmdi-view-list"></i> <span>{{ languages.calendar }}</span></a>
+                </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="zmdi zmdi-chart"></i><span class="label label-warning pull-right"></span><span>{{ languages.time_manager }}</span><span class="menu-arrow"></span> </a>
+                    <ul class="list-unstyled">
+                        <li><a href="/manageTimeTypes">{{ languages.types }}</a></li>
+                        <li><a href="/manageTimeRestrictions">{{ languages.restrictions }}</a></li>
+                        <li><a href="/manageTimeExceptions">{{ languages.exceptions }}</a></li>
+                    </ul>
+                </li>
+                <li class="has_sub">
+                    <a href="javascript:void(0);" class="waves-effect"><i class="zmdi zmdi-chart"></i><span class="label label-warning pull-right"></span><span>{{ languages.role_manager }}</span><span class="menu-arrow"></span> </a>
+                    <ul class="list-unstyled">
+                        <li><a href="/rolesTree">{{ languages.our_hierarchy }}</a></li>
+                        <li><a href="/configureRoles">{{ languages.configure_roles }}</a></li>
+                    </ul>
+                </li>
+                <li class="has_sub">
+                    <a href="/timeoff" class="waves-effect"><i class="zmdi zmdi-collection-text"></i><span class="label label-warning pull-right"></span><span>{{ languages.set_nodes_in_notifications }}</span></a>
+                </li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+        <!-- Sidebar -->
+        <div class="clearfix"></div>
+
+    </div>
+
+</div>

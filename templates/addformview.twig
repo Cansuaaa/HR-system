@@ -1,0 +1,24 @@
+{% include "/common/header.twig" %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 card-box">
+            <hr/>
+            <hr/>
+            <form id="descriptionForm" name="myForm" accept="file_extension|image/*" method="post" enctype="multipart/form-data">
+                <textarea name="descriptionArea" id="descriptionArea"></textarea>
+                <hr/>
+                <input type="file" id="file" name="pic" />
+                <hr/>
+                <input type="submit" name="btnDescription" id="btnDescription" value="Submit" />
+            </form>
+            <hr/>
+            <hr/>
+            <div id="position" style="display:none"></div>
+            <hr/>
+            <hr/>
+            <div style="display:none" class="alert alert-danger" role="alert" id="errorMessage"></div>
+            <div style="display:none" class="alert alert-success" role="alert" id="successMessage"></div>
+        </div>
+    </div>
+</div>
+{% include "/common/footer.twig" %}

@@ -1,0 +1,15 @@
+{% include "/common/header.twig" %}
+<div class="container">
+  <div class="row">
+      <div class="col-lg-6 card-box">
+          <form name="myForm" id="upload" accept="file_extension|image/*" method="post" enctype="multipart/form-data">
+              <input type="file" name="pic[]" id="file" />
+              <input type="submit" name="btnDescription" id="btnDescription" value="Submit" />
+          </form>
+          <p>{{ message }}</p>
+          <div style="display:none" class="alert alert-danger" role="alert" id="errorMessage"></div>
+          <div style="display:none" class="alert alert-success" role="alert" id="successMessage"></div>
+      </div>
+  </div>
+</div>
+{% include "/common/footer.twig" %}

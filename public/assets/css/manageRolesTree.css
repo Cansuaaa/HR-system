@@ -1,0 +1,58 @@
+#manageRolesTreeMenu li:first-child {
+    font-size: 20px;
+}
+#treeContainer ul {
+    list-style-type: none;
+}
+#treeContainer ul li:first-of-type{
+    background: url('/assets/images/closed.png') no-repeat;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}
+.titles {
+    font-size: 20px;
+    cursor: pointer;
+    padding-left: 25px;
+    background-repeat: no-repeat ;
+    padding-bottom: 10px;
+    padding-top: 10px;
+}
+#hierarchy {
+    font-size: 17px;
+    font-weight: bold;
+    margin-bottom: 30px;
+}
+.roles {
+    float: none;
+    vertical-align: middle;
+    font-size: 14px;
+}
+.pics {
+    float: none;
+    padding: 5px 0px 5px 7px;
+}
+#setRolesContainer {
+    display: none;
+}
+#treeContainer li:first-of-type{
+    background: none;
+}
+#treeContainer div{
+    margin-top: -1px;
+}
+#treeContainer li {
+    background: url('/assets/images/node.png') no-repeat;
+    margin: 0;
+    line-height: 20px;
+}
+#treeContainer ul li:last-of-type{
+    background: url('/assets/images/last.png'), url('/assets/images/below last.png')! important;
+    background-repeat: no-repeat! important;
+}
+.belowTitles{
+    padding-bottom: 8px;
+}
+.verticalTitle{
+    padding-top: 1px;
+}

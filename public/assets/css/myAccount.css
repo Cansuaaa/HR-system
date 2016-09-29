@@ -1,0 +1,62 @@
+#addNewSkill{
+    padding: 6px;
+}
+#btnAddNewSkill{
+    vertical-align: top;
+}
+.belowTitle{
+    height:20px;
+}
+#formNewSkills{
+    display: none;
+}
+.skills{
+    border: 1px solid #c9c9c9;
+    border-radius: 10px;
+    background: #f2f2f2;
+    padding: 5px 10px;
+    margin-right: 3px;
+    float: left;
+}
+.projects{
+    border: 1px solid;
+    border-color: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    /*background: #f2f2f2;*/
+    padding: 5px 10px;
+    margin-right: 3px;
+    font-size: 25px;
+    margin-bottom: 25px;
+}
+.removeLanguage{
+    font-size: 15px;
+    padding:5px;
+    border-radius: 50%;
+    vertical-align: center;
+    margin-left: 5px;
+    cursor: pointer;
+}
+.removeProject{
+    font-size: 15px;
+    padding:5px;
+    border-radius: 50%;
+    vertical-align: center;
+    margin-left: 5px;
+    cursor: pointer;
+    float: right;
+}
+#description, #descriptionExperience{
+    max-height: 150px;
+}
+.red{
+    color: red;
+}
+.heightBelow{
+    margin-bottom: 25px;
+}
+.heightLabel{
+    margin-bottom: 8px;
+}
+#addTimeToNewProjectContainer, #addNewExperienceContainer{
+    display: none;
+}

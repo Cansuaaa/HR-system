@@ -1,0 +1,15 @@
+composer.lock
+composer.phar
+config.php
+
+vendor/
+cache/
+logs/*
+
+.idea/
+.nbproject/
+nbproject/private/config.properties
+nbproject/private/private.properties
+nbproject/private/private.xml
+nbproject/project.properties
+nbproject/project.xml

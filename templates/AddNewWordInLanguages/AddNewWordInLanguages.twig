@@ -1,0 +1,57 @@
+{% include "./common/header.twig" %}
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="col-md-12">
+                        <div class="col-md-3">title</div>
+                        <div class="col-md-3">en</div>
+                        <div class="col-md-2">bg</div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="col-md-3">
+                            <input type="text" id="titles" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="wordEn" class="form-control">
+                        </div>
+                        <div class="col-md-3">
+                            <input type="text" id="wordBg" class="form-control">
+                        </div>
+                        <div class="col-md-2">
+                            <button id="btnAddNewWord">add new</button>
+                        </div>
+                    </div>
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+<script>
+    $('#btnAddNewWord').on('click', function () {
+        $data = {
+            title: $('#titles').val(),
+            en: $('#wordEn').val(),
+            bg: $('#wordBg').val()
+        };
+        console.log($('#wordEn').val());
+        $.ajax({
+            type: "get",
+            url: "/addnewword",
+            data: $data,
+            success: function (response) {
+//                $data = JSON.parse(response);
+                $('#titles').val("");
+                $('#wordEn').val("");
+                $('#wordBg').val("");
+            },
+            error: function () {
+                alert('asdas');
+            }
+        });
+    });
+</script>
+{% include "./common/footer.twig" %}

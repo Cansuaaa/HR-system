@@ -1,0 +1,36 @@
+{% include "./common/header.twig" %}
+<div class="container">
+    <div class="col-md-6">
+        <h1>Request Form</h1>
+        <form id="formInput" method="post">
+            <div class="control-group">
+                <span class="label label-default">From</span>
+                <div class="input-group">
+                    <p>Date From: <input class="datepicker fromDate" placeholder="Start Date"  type="text" name="dateFrom"/></p>
+                </div>
+            </div>
+            <div class="control-group">
+                <span class="label label-default">To</span>
+                <div class="input-group">
+                    <p>Date To:<input class="datepicker toDate" placeholder="End Date"  type="text" name="dateTo"/></p>
+                </div>
+            </div>
+            <div class="control-group">
+             <span class="label label-default">Type</span>
+                <select name="type" class="form-control">
+                    <option selected>Choose Type</option>
+                    <option>Vacation</option>
+                    <option>Sick Leave</option>
+                </select>
+            </div>
+            <div class="control-group">
+                <div class="input-group">
+                    <input class="form-control" type="submit"  value="Submit"/>
+                </div>
+            </div>
+        </form>
+        <p><b>Results:</b> <span id="results"></span></p>
+        <div id="showResponse">Show:</div>
+    </div>
+</div>
+{% include "common/footer.twig" %}

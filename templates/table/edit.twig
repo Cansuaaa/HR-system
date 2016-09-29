@@ -1,0 +1,47 @@
+{% include "./common/header.twig" %}
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+           <div class="col-lg-6 card-box">
+               <h3> User id {{ users['id'] }}</h3>
+               <hr>
+               <form action="#" data-parsley-validate novalidate>
+                   <div class="form-group">
+                       <label for="firstname">First Name*</label>
+                       <input type="text" name="firstname" parsley-trigger="change" required
+                              class="form-control" id="firstname" value="{{ users['firstname'] }}">
+                   </div>
+                   <div class="form-group">
+                       <label for="type">Type </label>
+                       <input type="text" name="type" parsley-trigger="change" required
+                              class="form-control" id="type" value="{{  users['type'] }}">
+                   </div>
+                   <div class="form-group">
+                       <label for="days">Days</label>
+                       <input id="days" type="text"   required
+                              class="form-control" value="{{ users['days'] }}">
+                   </div>
+                   <div class="form-group">
+                       <label for="from">From</label>
+                       <input id="from" type="text"   required
+                              class="form-control" value="{{ users['from'] }}">
+                   </div>
+                   <div class="form-group">
+                       <label for="to">To</label>
+                       <input id="to" type="text"   required
+                              class="form-control" value="{{ users['to'] }}">
+                   </div>
+                   <div class="form-group text-right m-b-0">
+                       <button class="btn btn-primary waves-effect waves-light" type="submit">
+                           Submit
+                       </button>
+                       <button type="reset" class="btn btn-default waves-effect waves-light m-l-5">
+                           Cancel
+                       </button>
+                   </div>
+               </form>
+           </div>
+        </div>
+    </div>
+</div>
+{% include "common/footer.twig" %}

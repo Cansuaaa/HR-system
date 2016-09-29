@@ -1,0 +1,79 @@
+{% include "./common/header.twig" %}
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row" id="treeContainer">
+                            <div id="hierarchy" class="col-md-12">
+                                {{ languages.the_hierarchy }}
+                            </div>
+                            <ul>
+                                <div id="managersContainer" class="col-md-12">
+                                    <li onclick="showManagersContainer('managersContainer')" class="belowTitles">
+                                        <div class="verticalTitle"><span class="titles">{{ languages.managers }}</span></div>
+                                    </li>
+                                </div>
+                                <ul>
+                                    <div id="leadersContainer" class="col-md-12">
+                                        <li onclick="showManagersContainer('leadersContainer')" class="belowTitles">
+                                            <div class="verticalTitle"><span class="titles">{{ languages.leaders }}</span></div>
+                                        </li>
+                                    </div>
+                                    <ul>
+                                        <div id="seniorsContainer" class="col-md-12">
+                                            <li onclick="showManagersContainer('seniorsContainer')" class="belowTitles">
+                                                <div class="verticalTitle"><span class="titles">{{ languages.seniors }}</span></div>
+                                            </li>
+                                        </div>
+                                        <ul>
+                                            <div id="developerContainer" class="col-md-12">
+                                                <li onclick="showManagersContainer('developerContainer')" class="belowTitles">
+                                                    <div class="verticalTitle"><span class="titles">{{ languages.middles }}<</span></div>
+                                                </li>
+                                            </div>
+                                            <ul>
+                                                <div id="juniorsContainer" class="col-md-12">
+                                                    <li onclick="showManagersContainer('juniorsContainer')" class="belowTitles">
+                                                        <div class="verticalTitle"><span class="titles">{{ languages.juniors }}</span></div>
+                                                    </li>
+                                                </div>
+
+                                                <ul>
+                                                    <div id="internsContainer" class="col-md-12">
+                                                        <li onclick="showManagersContainer('internsContainer')" class="belowTitles">
+                                                            <div class="verticalTitle"><span class="titles">{{ languages.interns }}</span></div>
+                                                            </li>
+                                                    </div>
+                                                </ul>
+                                            </ul>
+                                        </ul>
+                                    </ul>
+                                </ul>
+                            </ul>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+    </div> <!-- container -->
+</div> <!-- content -->
+<div id="setRolesContainer">
+    <div class="manager">lead</div>
+    <div class="leader">lead</div>
+    <div class="leader" id="me">Coool leader</div>
+    <div class="manager">lead</div>
+    <div class="junior">junior</div>
+    <div class="junior">junior</div>
+    <div class="junior">junior</div>
+    <div class="intern">intern</div>
+    <div class="intern">intern</div>
+    <div class="intern">intern</div>
+    <div class="developer">developer</div>
+    <div class="developer">developer</div>
+</div>
+{% include "./common/footer.twig" %}

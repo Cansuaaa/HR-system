@@ -1,0 +1,22 @@
+table th, table{
+    text-align: center;
+}
+table td{
+    font-size: 17px;
+    border: 1px solid lightgray;
+}
+table i{
+    cursor: pointer;
+}
+.chooseYes{
+    background: rgba(0, 200, 0, 0.2);
+}
+.chooseNo{
+    background: rgba(200, 0, 0, 0.2);
+}
+.fa-check-circle{
+    color: green;
+}
+.fa-ban{
+    color: red;
+}

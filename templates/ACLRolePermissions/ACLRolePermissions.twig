@@ -1,0 +1,146 @@
+{% include "./common/header.twig" %}
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="m-b-30"></div>
+                        </div>
+                        <div class="editable-responsive">
+                            <table class="table table-striped" id="datatable-editable">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Add new exp</th>
+                                    <th>add new project</th>
+                                    <th>view</th>
+                                    <th>add time</th>
+                                    <th>second time</th>
+                                    <th>approve</th>
+                                    <th>decline</th>
+                                    <th>decline</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for array in tableContent %}
+                                    {% for row in array %}
+                                    <tr>
+                                        <td>{{ row.email }}</td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseYes"></td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseNo"></td>
+                                        <td class="chooseNo"></td>
+                                    </tr>
+                                    {% endfor %}
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+                    <script>
+
+                        $(function () {
+                            var yes = document.getElementsByClassName('chooseYes');
+                            var no = document.getElementsByClassName('chooseNo');
+
+                            for (var i = 0; i < yes.length; i++) {
+                                var iElemYes = document.createElement('i');
+                                iElemYes.className = 'fa';
+                                iElemYes.classList.add('fa-check-circle');
+                                yes[i].appendChild(iElemYes);
+                            }
+
+                            for (var j = 0; j < no.length; j++) {
+                                var iElemNo = document.createElement('i');
+                                iElemNo.className = 'fa';
+                                iElemNo.classList.add('fa-ban');
+                                no[j].appendChild(iElemNo);
+                            }
+                            $(document.body).on('click', '#datatable-editable i', function (elem) {
+                                var self = $(this), allCells, name, data;
+                                allCells = $(this).closest('tr').find('td');
+                                name = allCells[0].innerText;
+
+                                if (self.hasClass('fa-check-circle')) {
+                                    data = {
+                                        "name": name,
+                                        'response': '0'
+                                    };
+                                    $.ajax({
+                                        type: 'get',
+                                        url: '/ACLRolePermissions/changes',
+                                        data: data,
+                                        success: function () {
+                                            $('#updateItemUsersManager').text(data['message']).fadeIn('fast').delay(1000).fadeOut();
+                                            self.parent().removeClass('chooseYes').addClass('chooseNo');
+                                            self.removeClass('fa-check-circle').addClass('fa-ban');
+                                        },
+                                        fail: function () {
+                                            $('#wrongUsersManager').text(data['message']).fadeIn('fast').delay(1000).fadeOut();
+                                        }
+                                    });
+                                } else {
+                                    data = {
+                                        "name": name,
+                                        'response': '1'
+                                    };
+                                    $.ajax({
+                                        type: 'get',
+                                        url: '/ACLRolePermissions/changes',
+                                        data: data,
+                                        success: function () {
+                                            $('#updateItemUsersManager').text(data['message']).fadeIn('fast').delay(1000).fadeOut();
+                                            self.parent().removeClass('chooseNo').addClass('chooseYes');
+                                            self.removeClass('fa-ban').addClass('fa-check-circle');
+                                        },
+                                        fail: function () {
+                                            $('#wrongUsersManager').text(data['message']).fadeIn('fast').delay(1000).fadeOut();
+                                        }
+                                    });
+                                }
+                            })
+                        });
+                    </script>
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+    </div> <!-- container -->
+
+</div> <!-- content -->
+
+<!-- MODAL -->
+<div id="dialog" class="modal-block mfp-hide">
+    <section class="panel panel-info panel-color">
+        <header class="panel-heading">
+            <h2 class="panel-title">{{ languages.are_you_sure }}</h2>
+        </header>
+        <div class="panel-body">
+            <div class="modal-wrapper">
+                <div class="modal-text">
+                    <p>{{ languages.are_you_sure_del }}</p>
+                </div>
+            </div>
+
+            <div class="row m-t-20">
+                <div class="col-md-12 text-right">
+                    <button id="dialogConfirm" class="btn btn-primary waves-effect waves-light">{{ languages.confirm }}</button>
+                    <button id="dialogCancel" class="btn btn-default waves-effect">{{ languages.cancel }}</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+<div id="updateItemUsersManager" class="affterNoteSuccess"></div>
+<div id="wrongUsersManager" class="affterNoteWrong"></div>
+{% include "./common/footer.twig" %}

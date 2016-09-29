@@ -1,0 +1,29 @@
+{% include 'common/header.twig' %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 table">
+            <table class="table table-responsive">
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Days</th>
+                    <th>From</th>
+                    <th>To</th>
+                    <th colspan="2">Actions</th>
+                </tr>
+                {% for user in users %}
+                <tr>
+                    <td>{{ user.firstname }}</td>
+                    <td>{{ user.type }}</td>
+                    <td>{{ user.days }}</td>
+                    <td>{{ user.from }}</td>
+                    <td>{{ user.to }}</td>
+                    <td><a href="/edit/{{user.id}}"><i class="glyphicon glyphicon-edit"></i>&nbsp;EDIT</a></td>
+                    <td><a href="#"><i class="glyphicon glyphicon-trash"></i>&nbsp;DELETE</a></td>
+                </tr>
+                {% endfor %}
+            </table>
+        </div>
+    </div>
+</div>
+{% include 'common/footer.twig' %}

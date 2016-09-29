@@ -1,0 +1,52 @@
+#notes{
+    position: fixed;
+    right: 0px;
+    top: 111px;
+    transform: rotate(270deg);
+    transform-origin: 92% 0%;
+    height: 100px;
+    background: #00bbff;
+    color: white;
+    transition: all 0.5s;
+    transition-timing-function: ease-out;
+    z-index: 8;
+    cursor: pointer;
+    border-radius: 10px;
+    padding-top: 8px;
+}
+#notes:hover{
+    margin-right: 40px;
+}
+#notes p {
+    margin: 0px 10px;
+    font-size: 17px;
+    white-space: nowrap;
+}
+#notesBackgroundResources{
+    position: fixed;
+    top:0px;
+    width: 100%;
+    height: 900px;
+    background: rgba(0, 0, 0, 0.3);
+    z-index: 9;
+    display: none;
+}
+.notesBackgroundText{
+    position: fixed;
+    top: 110px;
+    width: 35%;
+    margin-left: 25%;
+    border-radius: 20px;
+    background: white;
+    display: none;
+    z-index: 10;
+}
+.belowTitle{
+    margin-bottom: 5px;
+}
+.belowRow{
+    margin-bottom: 25px;
+}
+#textNotice{
+    max-height: 200px;
+}

@@ -1,0 +1,128 @@
+{% include "common/header.twig" %}
+<!-- Start content -->
+<div class="content">
+    <div class="container">
+        <div class="card-box">
+            <h4 class="header-title m-t-0 m-b-30">Date Picker</h4>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="p-20">
+                        <form id="logTimeForm" class="form-horizontal">
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{{ languages.time }}</label>
+                                <div class="col-md-8">
+                                    <input type="number" class="form-control" placeholder="{{ languages.time }}.." name="duration">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="control-label col-md-2">{{ languages.date }}</label>
+                                <div class="col-sm-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control kinguin-datePicker" placeholder="{{ languages.date_format }}" id="calendar-date" name="calendar-date">
+                                        <span class="input-group-addon bg-primary b-0 text-white"><i class="ti-calendar"></i></span>
+                                    </div><!-- input-group -->
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-2 control-label">{{ languages.project }}</label>
+                                <div class="col-md-8">
+                                    <select class="form-control" id="chooseProject" name="project-name">
+                                        <option hidden>{{ languages.choose_project }}</option>
+                                        {% for opt in content %}
+                                            <option value="{{opt.project_name}}">
+                                                {{opt.project_name}}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-8"  id="messageWrong"></div>
+                                <div class="col-md-2">
+                                    <button id="btnAddHours" class="col-md-12 btn btn-info waves-effect waves-light" >{{ languages.submit }}</button>
+                                </div>
+                            </div>
+                            <div id="mess"></div>
+                        </form>
+                    </div>
+                </div><!-- end col -->
+            </div><!-- end row-->
+        </div>
+    </div>
+</div>
+<!-- Start content -->
+<div class="content">
+    <div class="container">
+        <!-- end row -->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="panel">
+                    <div class="panel-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="m-b-30">
+                                    <button id="addToTable" class="btn btn-primary waves-effect waves-light">{{ languages.add }} <i class="fa fa-plus"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="editable-responsive">
+                            <table class="table table-striped" id="logtimeTable">
+                                <thead>
+                                <tr>
+                                    <th>{{ languages.project }}</th>
+                                    <th>{{ languages.time }}</th>
+                                    <th>{{ languages.date }}</th>
+                                    <th>{{ languages.edit_section }}</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for row in contentTable %}
+                                    <tr class="gradeC" id="{{row.id}}">
+                                        <td>{{row.project}}</td>
+                                        <td>{{row.time}} {{ languages.hour }}</td>
+                                        <td>{{row.date}}</td>
+                                        <td class="actions">
+                                            <i class="fa fa-trash-o deleteNewRow"> DELETE</i>
+                                        </td>
+                                     </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <!-- end: panel body -->
+
+                </div> <!-- end panel -->
+            </div> <!-- end col-->
+        </div>
+        <!-- end row -->
+
+    </div> <!-- container -->
+
+</div> <!-- content -->
+
+<!-- MODAL -->
+<div id="dialog" class="modal-block mfp-hide">
+    <section class="panel panel-info panel-color">
+        <header class="panel-heading">
+            <h2 class="panel-title">{{ languages.are_you_shure }}</h2>
+        </header>
+        <div class="panel-body">
+            <div class="modal-wrapper">
+                <div class="modal-text">
+                    <p>{{ languages.are_you_shure_del }}</p>
+                </div>
+            </div>
+
+            <div class="row m-t-20">
+                <div class="col-md-12 text-right">
+                    <button id="dialogConfirm" class="btn btn-primary waves-effect waves-light">{{ languages.confirm }}</button>
+                    <button id="dialogCancel" class="btn btn-default waves-effect">{{ languages.cancel }}</button>
+                </div>
+            </div>
+        </div>
+
+    </section>
+</div>
+{% include "common/footer.twig" %}
