@@ -18,19 +18,7 @@ class AddTimeToProjectController extends Controller {
         if (!ACL::canAccess($this->getName())) {
             $app->redirect('/');
         }
-        
-//        $arr = [ array("user" => "a", "lastN" => "asd"),
-//                array("user" => "b", "lastN" => "aasd"),
-//                array("user" => "c", "lastN" => "sdd"),
-//                array("user" => "d", "lastN" => "ad"),
-//            ];
-//            foreach ($arr as $elem) {
-//                var_dump($elem['user']);
-//                echo "<br>";
-//                
-//            }
-//            die;
-
+ 
         $javascript = array(
             '/assets/js/projectsLogtime.js',
             "/assets/pages/datatables.editable.addTime.js"
@@ -38,13 +26,24 @@ class AddTimeToProjectController extends Controller {
 
         $projectsNameModel = new ProjectsNameModel();
         $projectDetails = $projectsNameModel->getProjectName();
+        
+        $user = $_SESSION['userEmail'];
+        $addTimeToProjectModel = new AddTimeToProjectModel();
+        
+        
+        $dateTable = $addTimeToProjectModel->getTableData($user);
+        $eho = $addTimeToProjectModel->getDateDetails($user, "2016-09-27");
+        var_dump($eho);die;
+//        die;
         $data = [
             "content" => $projectDetails,
+            "contentTable" => $dateTable,
             "javascript" => $javascript,
             "languages" => $_SESSION['language'],
             "css" => ["/assets/css/addTime.css"]
         ];
-
+//        var_dump($data['']); die;
+       
         $app->render('addTime/addTime.twig', $data);
     }
 
@@ -68,6 +67,13 @@ class AddTimeToProjectController extends Controller {
         $duration = intval($hours);
 
         $addTimeToProjectModel = new AddTimeToProjectModel();
+        
+        
+        $select = $addTimeToProjectModel->getTableData($user);
+//        var_dump($select); die;
+        
+        
+        
         $validateDuration = $addTimeToProjectModel->validateDuration($duration);
         $validateDateFormat = $addTimeToProjectModel->validateDateFormat($calendarDate);
         $dateCheck = $addTimeToProjectModel->dateCheck($calendarDate);
@@ -129,5 +135,25 @@ class AddTimeToProjectController extends Controller {
         echo json_encode($data);
     }
 
+    /**
+     * @Route('/ajax/projectslogtime/GetInfo')
+     * @Name('ajaxProjectsLogtimeGetInfo.index')
+     * @Method('GET')
+     */
+    public function getAction() {
+        /** @var Yee\Yee $yee */
+        $app = $this->getYee();
+
+        $date = $app->request()->get('date');
+        
+        $addTimeToPorjectModel = new AddTimeToProjectModel();
+        
+//        $user = $_SESSION['userEmail'];
+//        $getDetail = $addTimeToPorjectModel->getDateDetails($user, $date);
+//        var_dump($getDetail);
+//        die;
+       
+//        echo json_encode($data);
+    }
 }
 

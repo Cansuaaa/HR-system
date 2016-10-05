@@ -32,6 +32,26 @@ $(function () {
         });
         e.preventDefault(e);
     });
+    for (var i = 0; i < $('.details').length; i++) {
+        $($('.details')[i]).on('click', function () {
+            var data = {
+                date: $($(this).closest('tr').find('td')[0]).text(),
+            };
+            console.log(data);
+            $.ajax({
+                type: 'GET',
+                dataType: 'json',
+                data: data,
+                url: '/ajax/projectslogtime/GetInfo',
+                success: function () {
+                    
+                },
+                error: function () {
+                    
+                }
+            })
+        })
+    }
 });
 
 //$(function () {

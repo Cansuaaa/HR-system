@@ -67,23 +67,24 @@
                         </div>
 
                         <div class="editable-responsive">
-                            <table class="table table-striped" id="logtimeTable">
+                            <table border="3" class="table table-striped" id="logtimeTable">
                                 <thead>
                                 <tr>
-                                    <th>{{ languages.project }}</th>
-                                    <th>{{ languages.time }}</th>
                                     <th>{{ languages.date }}</th>
-                                    <th>{{ languages.edit_section }}</th>
+                                    <th>{{ languages.total_logged_time }}</th>
+                                <th colspan="2" style="text-align: center;">{{ languages.edit_section }}</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 {% for row in contentTable %}
-                                    <tr class="gradeC" id="{{row.id}}">
-                                        <td>{{row.project}}</td>
-                                        <td>{{row.time}} {{ languages.hour }}</td>
+                                    <tr id="{{row.id}}">
                                         <td>{{row.date}}</td>
-                                        <td class="actions">
-                                            <i class="fa fa-trash-o deleteNewRow"> DELETE</i>
+                                        <td>{{row.duration}}</td>
+                                        <td>
+                                            <a href="{{row.date}}"><i class="fa fa-trash-o deleteNewRow">{{ languages.delete }}</i></a>
+                                        </td>
+                                        <td>
+                                            <a class="details" href="javascript:void(0)">{{ languages.details }}</a>
                                         </td>
                                      </tr>
                                 {% endfor %}
@@ -92,7 +93,7 @@
                         </div>
                     </div>
                     <!-- end: panel body -->
-
+                    
                 </div> <!-- end panel -->
             </div> <!-- end col-->
         </div>
