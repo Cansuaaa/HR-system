@@ -218,7 +218,7 @@ class AddTimeToProjectModel {
      * @param type $formTotalDuration
      * @return boolean
      */
-    public function checkTotalDuration($user, $calendarDate, $formTotalDuration) {
+    public function checkTotalDurationInsert($user, $calendarDate, $formDuration) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
 
@@ -233,7 +233,7 @@ class AddTimeToProjectModel {
             $duration = $arr['duration'];
             $dbTotalDuration = $dbTotalDuration + $duration;
         }
-        $totalDuration = $dbTotalDuration + $formTotalDuration;
+        $totalDuration = $dbTotalDuration + $formDuration;
 
         if ($dbTotalDuration >= $limitedHours) {
             return false;
@@ -245,6 +245,50 @@ class AddTimeToProjectModel {
             }
         }
     }
+    
+    
+    
+    
+    public function checkTotalDurationEdit($user, $calendarDate, $formDuration, $id) {
+        $app = \Yee\Yee::getInstance();
+        $db = $app->db['cassandra'];
+        
+        $date = str_replace('/', '-', $calendarDate);
+        $dateFormat = date('Y-m-d', strtotime($date));
+        $dateDb = $dateFormat . '+0000';
+         
+        $dateDetails = $this->getDateDetails($user, $dateFormat);
+        $dbTotalDuration = 0;
+        $limitedHours = 12;
+        
+        foreach ($dateDetails as $arr) {
+            $duration = $arr['duration'];
+            $dbTotalDuration = $dbTotalDuration + $duration;
+        }
+   
+        $dataById = $db->where('user', $user, '=')
+                ->where('date', $dateDb, '=')
+                ->where('id', $id, '=')
+                ->get('projects_log_time');
+        
+        foreach($dataById as $currentRow){
+            
+         $dbduration = $currentRow['duration'];
+        }
+        
+        $differenceOfDurationDB = $dbTotalDuration - $dbduration;
+//        var_dump($differenceOfDurationDB);
+        $differenceOfLimitDuration = $limitedHours - $differenceOfDurationDB;
+//        var_dump($differenceOfLimitDuration);
+//        die;
+        if($formDuration <= $differenceOfLimitDuration){
+            return true;
+        }
+        return false;
+        }
+    
+        
+        
     
     /**
      * Deletes all details for selected/particular date.
@@ -288,8 +332,14 @@ class AddTimeToProjectModel {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
         
-        $date = date('Y-m-d H:i:s', strtotime($tableDate));
-        $dbDate = $date . '+0000';
+//        $date = date('Y-m-d H:i:s', strtotime($tableDate));
+//        $dbDate = $date . '+0000';
+        
+        
+        $date = str_replace('/', '-', $tableDate);
+        $dateFormat = date('Y-m-d', strtotime($date));
+         $dateDb = $dateFormat . '+0000';
+        
         
         $data = Array(
             'duration' => $duration,
@@ -297,7 +347,7 @@ class AddTimeToProjectModel {
         );
         
         $db->where('user', $user)
-                ->where('date', $dbDate)
+                ->where('date', $dateDb)
                 ->where('id', $id)
                 ->update('projects_log_time', $data);
         
@@ -325,4 +375,45 @@ class AddTimeToProjectModel {
          }
          return true;
     }
+    
+    public function rawQueryYear($user) {
+        $app = \Yee\Yee::getInstance();
+        $db = $app->db['cassandra'];
+        
+        
+       $allData = $db->where('user', $user, '=')
+               ->get('projects_log_time');
+       $allDates = [];
+       $prevDate = NULL;
+       $currentDate;
+      
+               foreach($allData as $tablerow){
+           $currentDate = $tablerow['date']->format("Y");
+           
+           if($prevDate != NULL){
+               if($currentDate === $prevDate){
+                   continue;
+               }        
+           }
+          
+           $prevDate = $currentDate;
+           
+//           $dates = [];
+           array_push($allDates, ['date' => $currentDate]);
+           
+//           $detailsTable = ["date" => $currentDate, "duration" => $duration, 'project_name' => $projectName, 'id' => $id];
+       }
+       
+       
+       
+       
+       echo"<pre>";
+        var_dump($allDates);
+        die;
+    }
+    
+   
+    
+    
+    
 }
