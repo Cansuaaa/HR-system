@@ -245,69 +245,60 @@ class AddTimeToProjectModel {
             }
         }
     }
-    
-    
-    
-    
+
     public function checkTotalDurationEdit($user, $calendarDate, $formDuration, $id) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
-        
+
         $date = str_replace('/', '-', $calendarDate);
         $dateFormat = date('Y-m-d', strtotime($date));
         $dateDb = $dateFormat . '+0000';
-         
+
         $dateDetails = $this->getDateDetails($user, $dateFormat);
         $dbTotalDuration = 0;
         $limitedHours = 12;
-        
+
         foreach ($dateDetails as $arr) {
             $duration = $arr['duration'];
             $dbTotalDuration = $dbTotalDuration + $duration;
         }
-   
+
         $dataById = $db->where('user', $user, '=')
                 ->where('date', $dateDb, '=')
                 ->where('id', $id, '=')
                 ->get('projects_log_time');
-        
-        foreach($dataById as $currentRow){
-            
-         $dbduration = $currentRow['duration'];
+
+        foreach ($dataById as $currentRow) {
+
+            $dbduration = $currentRow['duration'];
         }
-        
+
         $differenceOfDurationDB = $dbTotalDuration - $dbduration;
-//        var_dump($differenceOfDurationDB);
         $differenceOfLimitDuration = $limitedHours - $differenceOfDurationDB;
-//        var_dump($differenceOfLimitDuration);
-//        die;
-        if($formDuration <= $differenceOfLimitDuration){
+        if ($formDuration <= $differenceOfLimitDuration) {
             return true;
         }
         return false;
-        }
-    
-        
-        
-    
+    }
+
     /**
      * Deletes all details for selected/particular date.
      *  
      * @param type $user
      * @param type $tableDate
      */
-    public function deleteSelectedtDate($user, $tableDate){
+    public function deleteSelectedtDate($user, $tableDate) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
-        
+
         $date = date('Y-m-d H:i:s', strtotime($tableDate));
-        $dbDate = $date . '+0000'; 
-        
+        $dbDate = $date . '+0000';
+
         $db->where('user', $user)
-                ->where('date', $dbDate)      
+                ->where('date', $dbDate)
                 ->delete('projects_log_time');
     }
-    
+
     /**
      * Deletes some details for a particular date.
      * 
@@ -315,105 +306,200 @@ class AddTimeToProjectModel {
      * @param type $tableDate
      * @param type $id
      */
-    public function deleteDateDetail($user, $tableDate, $id){
+    public function deleteDateDetail($user, $tableDate, $id) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
 
-       $date = date('Y-m-d H:i:s', strtotime($tableDate));
+        $date = date('Y-m-d H:i:s', strtotime($tableDate));
         $dbDate = $date . '+0000';
-        
+
         $db->where('user', $user)
                 ->where('date', $dbDate)
                 ->where('id', $id)
-                ->delete('projects_log_time');   
+                ->delete('projects_log_time');
     }
     
-    public function editDateDetail($user, $tableDate, $id, $duration, $projectName){
+    /**
+     * Updates details(duration and project's name) for a particular date.
+     * 
+     * @param type $user
+     * @param type $tableDate
+     * @param type $id
+     * @param type $duration
+     * @param type $projectName
+     */
+    public function editDateDetail($user, $tableDate, $id, $duration, $projectName) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
-        
-//        $date = date('Y-m-d H:i:s', strtotime($tableDate));
-//        $dbDate = $date . '+0000';
-        
-        
+
         $date = str_replace('/', '-', $tableDate);
         $dateFormat = date('Y-m-d', strtotime($date));
-         $dateDb = $dateFormat . '+0000';
-        
-        
+        $dateDb = $dateFormat . '+0000';
         $data = Array(
             'duration' => $duration,
             'project_name' => $projectName
         );
-        
         $db->where('user', $user)
                 ->where('date', $dateDb)
                 ->where('id', $id)
                 ->update('projects_log_time', $data);
-        
     }
-    
-    public function isIdAdded($user, $dateForm, $id){
+    /**
+     * Checks if the id has already been added in the DB.
+     * 
+     * @param type $user
+     * @param type $dateForm
+     * @param type $id
+     * @return boolean
+     */
+    public function isIdAdded($user, $dateForm, $id) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
-        
+
         $date = str_replace('/', '-', $dateForm);
         $dateFormat = date('Y-m-d', strtotime($date));
-         $dateDb = $dateFormat . '+0000';
-         
-         $allData = $db->where('user', $user, '=')
+        $dateDb = $dateFormat . '+0000';
+
+        $allData = $db->where('user', $user, '=')
                 ->where('date', $dateDb, '=')
                 ->where('id', $id, '=')
                 ->get('projects_log_time');
-         
-//         echo"<pre>";
-//         var_dump($allData);
-//         die;
-         
-         if($allData == NULL){
-             return false;
-         }
-         return true;
+
+        if ($allData == NULL) {
+            return false;
+        }
+        return true;
     }
     
-    public function rawQueryYear($user) {
+    /**
+     * 
+     * @param type $user
+     * @return array which contains all added years.
+     */
+    public function getYears($user) {
         $app = \Yee\Yee::getInstance();
         $db = $app->db['cassandra'];
-        
-        
-       $allData = $db->where('user', $user, '=')
-               ->get('projects_log_time');
-       $allDates = [];
-       $prevDate = NULL;
-       $currentDate;
-      
-               foreach($allData as $tablerow){
-           $currentDate = $tablerow['date']->format("Y");
-           
-           if($prevDate != NULL){
-               if($currentDate === $prevDate){
-                   continue;
-               }        
-           }
-          
-           $prevDate = $currentDate;
-           
-//           $dates = [];
-           array_push($allDates, ['date' => $currentDate]);
-           
-//           $detailsTable = ["date" => $currentDate, "duration" => $duration, 'project_name' => $projectName, 'id' => $id];
-       }
-       
-       
-       
-       
-       echo"<pre>";
-        var_dump($allDates);
-        die;
+
+        $allData = $db->where('user', $user, '=')
+                ->get('projects_log_time');
+        $allDates = [];
+        $prevDate = NULL;
+        $currentDate;
+
+        foreach ($allData as $tablerow) {
+            $currentDate = $tablerow['date']->format("Y");
+
+            if ($prevDate != NULL) {
+                if ($currentDate === $prevDate) {
+                    continue;
+                }
+            }
+            $prevDate = $currentDate;
+            array_push($allDates, ['year' => $currentDate]);
+        }
+        return $allDates;
     }
     
-   
+    
+    
+//    public function checkProjectAndDate($user, $dateForm, $projectNameForm) {
+//        $app = \Yee\Yee::getInstance();
+//        $db = $app->db['cassandra'];
+//
+//
+//        $date = str_replace('/', '-', $dateForm);
+//        $dateFormat = date('Y-m-d', strtotime($date));
+//        $dateDb = $dateFormat . '+0000';
+//
+//        $data = $db->where('user', $user, '=')
+//                ->where('date', $dateDb, '=')
+//                ->get('projects_log_time');
+//        
+//        foreach ($data as $arr) {
+//            $projectNameDb = $arr['project_name'];
+//            
+//            if ($projectNameDb === $projectNameForm) {
+//                
+//                $duration = $arr['duration'];
+//           
+//                $data = Array(
+//            'duration' => $duration,
+//            'project_name' => $projectNameForm,
+//        );
+//                
+//        $db->where('user', $user)
+//                ->where('date', $dateDb)
+//                ->where('project_name', $projectNameForm)
+//                ->update('projects_log_time', $data);
+//                   return true;
+//                }
+//            }
+//            
+//            return false;
+//        }
+        
     
     
     
+    public function editDuration($user, $dateForm, $duration, $projectName) {
+        $app = \Yee\Yee::getInstance();
+        $db = $app->db['cassandra'];
+
+        $date = str_replace('/', '-', $dateForm);
+        $dateFormat = date('Y-m-d', strtotime($date));
+        $dateDb = $dateFormat . '+0000';
+        
+        $data = Array(
+            'duration' => $duration,
+            'project_name' => $projectName,
+        );
+        $db->where('user', $user)
+                ->where('date', $dateDb)
+                ->where('project_name', $projectName)
+                ->update('projects_log_time', $data);
+    }
+    
+    
+    
+     public function checkProjectAndDate($user, $dateForm, $projectNameForm) {
+        $app = \Yee\Yee::getInstance();
+        $db = $app->db['cassandra'];
+
+
+        $date = str_replace('/', '-', $dateForm);
+        $dateFormat = date('Y-m-d', strtotime($date));
+        $dateDb = $dateFormat . '+0000';
+
+        $data = $db->where('user', $user, '=')
+                ->where('date', $dateDb, '=')
+                ->get('projects_log_time');
+        
+        foreach ($data as $arr) {
+            $projectNameDb = $arr['project_name'];
+            
+            
+            if ($projectNameDb === $projectNameForm) {
+                $id = $arr['id'];
+                $duration = $arr['duration'];
+
+                
+                $data = Array(
+            'duration' => $duration,
+//            'project_name' => $projectNameForm,
+        );
+                
+        $db->where('user', $user)
+                ->where('date', $dateDb)
+                ->where('id', $id)
+                ->update('projects_log_time', $data);
+                   return true;
+                }
+            }
+            
+            return false;
+        }
+    
+    
+    
+
 }
