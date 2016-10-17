@@ -15,6 +15,7 @@ class AddTimeToProjectController extends Controller {
     public function addTimeToProjectAction() {
         $app = $this->getYee();
 
+        $user = $_SESSION['userEmail'];
         if (!ACL::canAccess($this->getName())) {
             $app->redirect('/');
         }
@@ -26,62 +27,42 @@ class AddTimeToProjectController extends Controller {
 
         $projectsNameModel = new ProjectsNameModel();
         $projectDetails = $projectsNameModel->getProjectName();
-//        echo"<pre>";
-//        var_dump($projectDetails);
-//        die;
-        $user = $_SESSION['userEmail'];
+
+
         $addTimeToProjectModel = new AddTimeToProjectModel();
-
         $totalDurationAndDate = $addTimeToProjectModel->getTotalDurationAndDate($user);
-
+//        echo"<pre>";
+//        var_dump($totalDurationAndDate);
+//        die;
         $years = $addTimeToProjectModel->getYears($user);
 
 
         $date = "08/04/2013";
-//       $date = "2016-09-14";
         $id; //= "d09d19a9-5196-4651-a307-32bf8c61e408";
         $duration = 5;
         $projectName = "HR System";
-
-//       $bla = $addTimeToProjectModel->editDuration($user, $date, $duration, $projectName );
-//       
-//       
-//       
-//       
-//       
+       
+        $year = '2016';
+        $month = '10';
+        $getDate = $addTimeToProjectModel->getDate($user, $year, $month);
+        
+//        echo'<pre>';
+//        var_dump($months);
+//        die;
 //        $checkProjectAndDate = $addTimeToProjectModel->checkProjectAndDate($user, $date, $projectName);
-//        var_dump($checkProjectAndDate);
-//        die;
-//        echo"<pre>";
-//        var_dump($years);
-//        die;
-//        
-//        
-//        
-//        
-//        
-//        
-//        
 //        $isIdAdded = $addTimeToProjectModel->isIdAdded($user, $date, $id);
-//        var_dump($isIdAdded);
-//        die;
-//        // updates Date's details
+//       
+//     // Updates Date's details
 //        $editDateDetail = $addTimeToProjectModel->editDateDetail($user, $date, $id, $duration, $projectName);
-        // die;
-//        // Deletes details for a particular date
-//         $deleteDateDetail = $addTimeToProjectModel->deleteDateDetail($user, $date, $id);
-//     // deletes Date and it's all details 
-//        $deleteDate = $addTimeToProjectModel->deleteSelectedtDate($user, $date);
-//        die;
-//        $dateDetails = $addTimeToProjectModel->getDateDetails($user, $date);
-//       // small table date's details
-//        echo"<pre>";
-//        var_dump($dateDetails);
-//        die;
 //        
-
-
-
+//     // Deletes details for a particular date
+//         $deleteDateDetail = $addTimeToProjectModel->deleteDateDetail($user, $date, $id);
+//         
+//     //Deletes Date and it's all details 
+//        $deleteDate = $addTimeToProjectModel->deleteSelectedtDate($user, $date);
+//        
+//     // small table date's details
+//        $dateDetails = $addTimeToProjectModel->getDateDetails($user, $date);
 
         $data = [
             "years" => $years,
@@ -91,7 +72,6 @@ class AddTimeToProjectController extends Controller {
             "languages" => $_SESSION['language'],
             "css" => ["/assets/css/addTime.css"],
         ];
-
         $app->render('addTime/addTime.twig', $data);
     }
 
@@ -119,31 +99,33 @@ class AddTimeToProjectController extends Controller {
 
         $isDateAdded = $addTimeToProjectModel->isDateAdded($user, $calendarDate);
         $validateDuration = $addTimeToProjectModel->validateDuration($duration);
+        $duartionField = $addTimeToProjectModel->checkDurationField($hours);
         $validateDateFormat = $addTimeToProjectModel->validateDateFormat($calendarDate);
         $dateCheck = $addTimeToProjectModel->dateCheck($calendarDate);
         $addOrUpdate = TRUE;  //If it is false = Add or if it is true = update
 
-        /////////////////////////////////////////////////////////////////////////////////////////////////////
+        if ($projectName == "Choose project") {
+            $error = 'Please, choose a project!';
+        }
 
-//        if ($projectName == "Choose project") {
-//            $error = 'Please, choose a project!';
-//        }
+        if (!$validateDuration == true) {
+            $error = 'Your hours must be between 1 and 12!';
+        }
 
+        if (!$duartionField == true) {
+
+            $error = 'The duration field cannot be empty!';
+        }
+
+        if (!$validateDateFormat == true) {
+            $error = 'The date format is not valid!';
+        }
+
+        if (!$dateCheck == true) {
+            $error = 'Future dates or empty date field aren\'t allowed!';
+        }
 
         if (!$isDateAdded == true) {
-
-            var_dump('1');
-            if (!$validateDuration == true) {
-                $error = 'Your hours must be between 1 and 12!';
-            }
-
-            if (!$validateDateFormat == true) {
-                $error = 'The date format is not valid!';
-            }
-
-            if (!$dateCheck == true) {
-                $error = 'Future dates or empty date field aren\'t allowed!';
-            }
 
             if (isset($error)) {
                 $data = array(
@@ -154,7 +136,6 @@ class AddTimeToProjectController extends Controller {
             } else {
 
                 $addTimeToProjectModel->insertTimeData($user, $projectName, $duration, $calendarDate);
-                var_dump('2');
                 $data = array(
                     'duration' => $duration,
                     'calendarDate' => $calendarDate,
@@ -165,29 +146,16 @@ class AddTimeToProjectController extends Controller {
                 );
             }
             echo json_encode($data);
-            
         } else {
-var_dump('3');
+
             $isProjectAndDateAdded = $addTimeToProjectModel->checkProjectAndDate($user, $calendarDate, $projectName);
 
             if (!$isProjectAndDateAdded == true) {
-            
-                $isDurationBiggerThanLimitInsert = $addTimeToProjectModel->checkTotalDurationInsert($user, $calendarDate, $duration);
 
-//                if (!$validateDuration == true) { here it isn't needed
-//                    $error = 'Your hours must be between 1 and 12!';  
-//                }
+                $isDurationBiggerThanLimitInsert = $addTimeToProjectModel->checkTotalDurationInsert($user, $calendarDate, $duration);
 
                 if (!$isDurationBiggerThanLimitInsert == true) {
                     $error = 'Your hoursssss must be between 1 and 12! insert';
-                }
-
-                if (!$validateDateFormat == true) {
-                    $error = 'The date format is not valid!';
-                }
-
-                if (!$dateCheck == true) {
-                    $error = 'Future dates or empty date field aren\'t allowed!';
                 }
 
                 if (isset($error)) {
@@ -196,11 +164,9 @@ var_dump('3');
                         'error' => true,
                         'success' => false,
                     );
-                    var_dump('4');
                 } else {
 
                     $addTimeToProjectModel->insertTimeData($user, $projectName, $duration, $calendarDate);
-var_dump('5');
                     $data = array(
                         'duration' => $duration,
                         'calendarDate' => $calendarDate,
@@ -212,29 +178,15 @@ var_dump('5');
                 }
 
                 echo json_encode($data);
-                var_dump('6');
             } else {
-                var_dump('7');
-                
+
                 $isDurationBiggerThanLimitEdit = $addTimeToProjectModel->checkTotalDurationEdit($user, $calendarDate, $duration, $projectName);
 
                 if ($addOrUpdate == TRUE) {
-                    
-                    if (!$validateDuration == true) {
-                $error = 'Your hours must be between 1 and 12!';
-                    }
-                    
-                    if(!$isDurationBiggerThanLimitEdit == true){
+
+                    if (!$isDurationBiggerThanLimitEdit == true) {
                         $error = 'Your hoursssss must be between 1 and 12! replace';
                     }
-
-                    if (!$validateDateFormat == true) {
-                        $error = 'The date format is not valid!';
-                    }
-
-//                    if (!$dateCheck == true) {
-//                        $error = 'Future dates or empty date field aren\'t allowed!';
-//                    }
 
                     if (isset($error)) {
                         $data = array(
@@ -242,11 +194,9 @@ var_dump('5');
                             'error' => true,
                             'success' => false,
                         );
-                        var_dump('8');
                     } else {
 
                         $editDuration = $addTimeToProjectModel->editDuration($user, $calendarDate, $projectName, $duration);
-var_dump('9');
                         $data = array(
                             'duration' => $duration,
                             'calendarDate' => $calendarDate,
@@ -256,29 +206,15 @@ var_dump('9');
                             'message' => 'You have edited hours successfully!'
                         );
                     }
-// var_dump('10a');
                     echo json_encode($data);
-                    
                 } else {
-                    
-                    var_dump('11');
+
+
                     $isDurationBiggerThanLimitInsert = $addTimeToProjectModel->checkTotalDurationInsert($user, $calendarDate, $duration);
-                    
-                     if (!$validateDuration == true) {
-                $error = 'Your hours must be between 1 and 12!';
-                    }
-                    
-                    if(!$isDurationBiggerThanLimitInsert == true){
+
+                    if (!$isDurationBiggerThanLimitInsert == true) {
                         $error = 'Your hoursssss must be between 1 and 12! replace';
                     }
-
-                    if (!$validateDateFormat == true) {
-                        $error = 'The date format is not valid!';
-                    }
-
-//                    if (!$dateCheck == true) {
-//                        $error = 'Future dates or empty date field aren\'t allowed!';
-//                    }
 
                     if (isset($error)) {
                         $data = array(
@@ -286,11 +222,9 @@ var_dump('9');
                             'error' => true,
                             'success' => false,
                         );
-                        var_dump('11');
                     } else {
 
                         $addDuration = $addTimeToProjectModel->addDuration($user, $calendarDate, $projectName, $duration);
-var_dump('12');
                         $data = array(
                             'duration' => $duration,
                             'calendarDate' => $calendarDate,
@@ -299,104 +233,12 @@ var_dump('12');
                             'success' => true,
                             'message' => 'You have added hours successfully!'
                         );
-                        var_dump('13');
-                    }                    
+                    }
                     echo json_encode($data);
-                    var_dump('14');
                 }
-                
-                
             }
         }
     }
-
-//            ////////////////////////////////////////////
-    //                    $editDuration = $addTimeToProjectModel->editDuration($user, $calendarDate, $duration, $projectName);
-//                     
-//                
-//                if ($validationOfTotalDuration != true) {
-//                    $error = 'Your hourssss must be between 1 and 12!';
-//                }
-//            
-//                
-//                
-//                  $checkProjectAndDate = $addTimeToProjectModel->checkProjectAndDate($user, $calendarDate, $projectName);
-//                    if($checkProjectAndDate == true){
-//                       
-//                    $data = array(
-//                    'duration' => $duration,
-//                    'calendarDate' => $calendarDate,
-//                    'projectID' => $projectName,
-//                    'error' => false,
-//                    'success' => true,
-//                    'message' => 'You update duration successfully!'
-//                          );
-//                    }
-//                    ///////////////////////////////////////////////////////////////////////////////////////////
-//        }else {
-//            
-//            $checkTotalDurationEdit = $addTimeToProjectModel->checkTotalDurationEdit($user, $calendarDate, $duration, $id);
-//            
-//             if ($projectName == "Choose project") {
-//                $error = 'Please, choose a project!';
-//            }
-//
-//            if (!$validateDuration == true) {
-//                $error = 'Your hours must be between 1 and 12!';
-//            }
-//
-//            if (!$checkTotalDurationEdit == true) {
-//                $error = 'Your hours must be between 1 and 12 for this date!';
-//            }
-//
-//            if (isset($error)) {
-//                $data = array(
-//                    'message' => $error,
-//                    'error' => true,
-//                    'success' => false
-//                );
-//            } else {
-//                $editDateDetail = $addTimeToProjectModel->editDateDetail($user, $calendarDate, $id, $duration, $projectName);
-//
-//                $data = array(
-//                    'duration' => $duration,
-//                    'calendarDate' => $calendarDate,
-//                    'projectID' => $projectName,
-//                    'error' => false,
-//                    'success' => true,
-//                    'message' => 'Your update is successful!'
-//                );
-//            }
-//            
-//        }
-//    /**
-//     * @Route('/ajax/projectslogtime/delete')
-//     * @Name('ajaxProjectsLogtimeDelete.index')
-//     * @Method('post')
-//     */
-//    public function deleteAction() {
-//        /** @var Yee\Yee $yee */
-//        $app = $this->getYee();
-//
-////        if (!ACL::canAccess($this->getName())) {
-////            echo 'You cannot do that';
-////        }
-//
-////        $projectID = $app->request()->post('id');
-////
-////        $data = array(
-////            'error' => false,
-////            'success' => $projectID
-////        );
-//        
-//        $deleteButton = "1";
-//        $addTimeToProjectModel = new AddTimeToProjectModel();
-//        if(isset($deleteButton) == true){
-//            $deleteCurrentDate = $addTimeToProjectModel->deleteCurrentDate($user, "2016-09-27");
-//        }
-//        
-//        echo json_encode($data);
-//    }
 
     /**
      * @Route('/ajax/projectslogtime/GetInfo')
