@@ -28,7 +28,6 @@ class AddTimeToProjectController extends Controller {
         $projectsNameModel = new ProjectsNameModel();
         $projectDetails = $projectsNameModel->getProjectName();
 
-
         $addTimeToProjectModel = new AddTimeToProjectModel();
         $totalDurationAndDate = $addTimeToProjectModel->getTotalDurationAndDate($user);
 //        echo"<pre>";
@@ -44,8 +43,19 @@ class AddTimeToProjectController extends Controller {
        
         $year = '2016';
         $month = '10';
-        $getDate = $addTimeToProjectModel->getDate($user, $year, $month);
         
+        
+//        
+//      $tb  = $addTimeToProjectModel->getDate($user);
+//        echo"<pre>";
+//        var_dump($tb);
+//        die;
+//        
+//        $CurrentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
+//        echo"<pre>";
+//        var_dump($CurrentMonth);
+//        die;
+//       
 //        echo'<pre>';
 //        var_dump($months);
 //        die;

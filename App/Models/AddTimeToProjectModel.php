@@ -270,7 +270,7 @@ class AddTimeToProjectModel {
 
     /**
      * Checks if totalDuration(for a particular date) =< 12, 
-     * where totalDuration = totalDuration from DB + the new inserted value of duration.
+     * where totalDuration = totalDuration from DB + the new edited value of duration.
      * 
      * @param type $user
      * @param type $calendarDate
@@ -395,7 +395,7 @@ class AddTimeToProjectModel {
         $dateDb = $dateFormat . '+0000';
 
         $id = $this->getId($user, $dateDb, $projectNameForm);
-        
+
         $dataDb = $this->db->where('user', $user)
                 ->where('date', $dateDb)
                 ->where('id', $id)
@@ -417,7 +417,7 @@ class AddTimeToProjectModel {
     /**
      * 
      * @param type $user
-     * @return array which contains all added years.
+     * @returns an array which contains all added years.
      */
     public function getYears($user) {
         $allData = $this->db->where('user', $user, '=')
@@ -439,99 +439,71 @@ class AddTimeToProjectModel {
         }
         return $allYears;
     }
-    
-    public function getDate($user, $year, $month) {
-        
-       
-//        echo"<pre>";
-//        var_dump($DATES);
-//        die;
-        
-        
+    /**
+     * 
+     * @param type $user
+     * @returns an array which contains all dates for the user. 
+     */
+    public function getDate($user) {
         $allData = $this->getTableData($user);
         $currentDate;
         $prevDate = NULL;
         $dates = [];
-        
-        foreach ($allData as $data){
+
+        foreach ($allData as $data) {
             $currentDate = $data['date']->format("Y-m-d");
-            
-            if($prevDate != NULL){
-                if($currentDate === $prevDate){
+
+            if ($prevDate != NULL) {
+                if ($currentDate === $prevDate) {
                     continue;
                 }
             }
-            
-             $prevDate = $currentDate;
-              array_push($dates, ['date'=> $currentDate]);
-         }
-         
-       
-        
-        
-        
-         $yearAndMonth = $year.'-'.$month;
-        $dateFormat = date('Y-m', strtotime($yearAndMonth));
-        $dateDb = $dateFormat . '+0000';
-       $DATES = [];
-        for( $i = 1; $i<=31; $i++){
-            $day = $i;
-            $yearAndMonth = $year.'-'.$month. '-'.$day;
-            $dateFormat = date('Y-m-d', strtotime($yearAndMonth));
-        
-        foreach($dates as $row){
-            $dbDate = $row['date'];
-            
-//            if(){
-//                
-//            }
-            
-        }
-        
-        array_push($DATES, ['date'=> $dateFormat]);
-        
-        }
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-//            $days = [];
-//            foreach($dates as $singleRow){
-//                $wholeDate = $singleRow['date'];
-//                $daysForExplode = explode('-', $wholeDate);
-//                $day = $daysForExplode[2];
-//                
-//                        
-//                array_push($days, ['days'=>$day]);
-//            }
-            
-            return $days;
-        }
-        
-        
-        
-//        $days = [];
-//       foreach($dates as $rowwDate){
-//           $day = $rowwDate['date'];
-//           
-//           array_push($days, ['days'=> $day]);
-//       } 
 
+            $prevDate = $currentDate;
+            array_push($dates, ['date' => $currentDate]);
+        }
+
+        return $dates;
+    }
+    
+    /**
+     * 
+     * @param type $user
+     * @param type $year
+     * @param type $month
+     * @returns array which contains dates for selected or current month and year.
+     */
+    public function getCurrentMonth($user, $year, $month) {
+        $dates = $this->getDate($user);
+        $currentMonth = [];
+        $prevValue = NULL;
+        $currentValue;
+        $dateFormat;
+        $dbDate;
         
-        
-//        foreach($wholeDate as $singleDate){
-//             $day = $singleDate['date']->format('Y-m-d'); 
-//             echo"<pre>";
-//             var_dump($day);
-//             die;
-//       
-//    }
+        for ($i = 31; $i >= 1; $i--) {
+            $day = $i;
+            $yearAndMonth = $year . '-' . $month . '-' . $day;
+            $dateFormat = date('Y-m-d', strtotime($yearAndMonth));
+
+            foreach ($dates as $row) {
+                $dbDate = $row['date'];
+
+                if ($dbDate !== $dateFormat) {
+                    continue;
+                }
+                $currentValue = $dbDate;
+
+                if ($prevValue !== NULL) {
+                    if ($currentValue == $prevValue) {
+                        continue;
+                    }
+                    $prevValue = $currentValue;
+                }
+                $arElementDate = $currentValue;
+                array_push($currentMonth, ['date' => $arElementDate]);
+            }
+        }
+        return $currentMonth;
+    }
 }
