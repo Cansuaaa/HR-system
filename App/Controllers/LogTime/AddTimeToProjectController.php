@@ -16,6 +16,7 @@ class AddTimeToProjectController extends Controller {
         $app = $this->getYee();
 
         $user = $_SESSION['userEmail'];
+
         if (!ACL::canAccess($this->getName())) {
             $app->redirect('/');
         }
@@ -29,31 +30,50 @@ class AddTimeToProjectController extends Controller {
         $projectDetails = $projectsNameModel->getProjectName();
 
         $addTimeToProjectModel = new AddTimeToProjectModel();
-        $totalDurationAndDate = $addTimeToProjectModel->getTotalDurationAndDate($user);
-//        echo"<pre>";
-//        var_dump($totalDurationAndDate);
-//        die;
-        $years = $addTimeToProjectModel->getYears($user);
+        $userData = $addTimeToProjectModel->checkUserData($user);
 
-
-        $date = "08/04/2013";
-        $id; //= "d09d19a9-5196-4651-a307-32bf8c61e408";
-        $duration = 5;
-        $projectName = "HR System";
-       
-        $year = '2016';
-        $month = '10';
+        $userDuration= $addTimeToProjectModel->checkUsersDuration();
+        echo"<pre>";
+        var_dump($userDuration);
+       die; 
         
         
-//        
-//      $tb  = $addTimeToProjectModel->getDate($user);
+        
+        if ($userData == False) {
+            $data = [
+                "content" => $projectDetails,
+                "javascript" => $javascript,
+                "languages" => $_SESSION['language'],
+                "css" => ["/assets/css/addTime.css"],
+            ];
+        } else {
+            
+
+//        $date = "08/04/2013";
+//        $id; //= "d09d19a9-5196-4651-a307-32bf8c61e408";
+//        $duration = 5;
+//        $projectName = "HR System";
+            $year = '2016';
+            $month = '02';
+            
+            $current = $addTimeToProjectModel->getNumberOfDays($year, $month);
+//            echo"<pre>";
+//            var_dump($current);
+//            die;
+            
+             $currentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
+//             echo"<pre>";
+//            var_dump($currentMonth);
+//            die;
+            
+            $years = $addTimeToProjectModel->getYears($user);
+            $totalDurationAndDate = $addTimeToProjectModel->getTotalDurationAndDate($user, $year, $month);
+
+//        $currentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
+//        $NumberOfDays = $addTimeToProjectModel->getNumberOfDays($user, $year, $month);
+//        var_dump($NumberOfDays);
 //        echo"<pre>";
-//        var_dump($tb);
-//        die;
-//        
-//        $CurrentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
-//        echo"<pre>";
-//        var_dump($CurrentMonth);
+//        var_dump($currentMonth);
 //        die;
 //       
 //        echo'<pre>';
@@ -74,14 +94,15 @@ class AddTimeToProjectController extends Controller {
 //     // small table date's details
 //        $dateDetails = $addTimeToProjectModel->getDateDetails($user, $date);
 
-        $data = [
-            "years" => $years,
-            "content" => $projectDetails,
-            "contentTable" => $totalDurationAndDate,
-            "javascript" => $javascript,
-            "languages" => $_SESSION['language'],
-            "css" => ["/assets/css/addTime.css"],
-        ];
+            $data = [
+                "years" => $years,
+                "content" => $projectDetails,
+                "contentTable" => $totalDurationAndDate,
+                "javascript" => $javascript,
+                "languages" => $_SESSION['language'],
+                "css" => ["/assets/css/addTime.css"],
+            ];
+        }
         $app->render('addTime/addTime.twig', $data);
     }
 
@@ -131,9 +152,9 @@ class AddTimeToProjectController extends Controller {
             $error = 'The date format is not valid!';
         }
 
-        if (!$dateCheck == true) {
-            $error = 'Future dates or empty date field aren\'t allowed!';
-        }
+//        if (!$dateCheck == true) {
+//            $error = 'Future dates or empty date field aren\'t allowed!';
+//        }
 
         if (!$isDateAdded == true) {
 
@@ -144,7 +165,6 @@ class AddTimeToProjectController extends Controller {
                     'success' => false,
                 );
             } else {
-
                 $addTimeToProjectModel->insertTimeData($user, $projectName, $duration, $calendarDate);
                 $data = array(
                     'duration' => $duration,
@@ -157,7 +177,6 @@ class AddTimeToProjectController extends Controller {
             }
             echo json_encode($data);
         } else {
-
             $isProjectAndDateAdded = $addTimeToProjectModel->checkProjectAndDate($user, $calendarDate, $projectName);
 
             if (!$isProjectAndDateAdded == true) {
@@ -175,7 +194,6 @@ class AddTimeToProjectController extends Controller {
                         'success' => false,
                     );
                 } else {
-
                     $addTimeToProjectModel->insertTimeData($user, $projectName, $duration, $calendarDate);
                     $data = array(
                         'duration' => $duration,
@@ -186,10 +204,8 @@ class AddTimeToProjectController extends Controller {
                         'message' => 'You added hours and your project successfully!'
                     );
                 }
-
                 echo json_encode($data);
             } else {
-
                 $isDurationBiggerThanLimitEdit = $addTimeToProjectModel->checkTotalDurationEdit($user, $calendarDate, $duration, $projectName);
 
                 if ($addOrUpdate == TRUE) {
@@ -218,8 +234,6 @@ class AddTimeToProjectController extends Controller {
                     }
                     echo json_encode($data);
                 } else {
-
-
                     $isDurationBiggerThanLimitInsert = $addTimeToProjectModel->checkTotalDurationInsert($user, $calendarDate, $duration);
 
                     if (!$isDurationBiggerThanLimitInsert == true) {
@@ -233,7 +247,6 @@ class AddTimeToProjectController extends Controller {
                             'success' => false,
                         );
                     } else {
-
                         $addDuration = $addTimeToProjectModel->addDuration($user, $calendarDate, $projectName, $duration);
                         $data = array(
                             'duration' => $duration,

@@ -125,6 +125,23 @@ class AddTimeToProjectModel {
     }
 
     /**
+     * Cheks if there is any data for a given user.
+     * 
+     * @param type $user
+     * @return boolean
+     */
+    public function checkUserData($user) {
+        $tableData = $this->db->where('user', $user, '=', 'allow filtering')->get('projects_log_time');
+//        var_dump($tableData);
+//        die;
+        if($tableData == NULL){
+            return FALSE;
+        }
+        return TRUE;
+    }
+    
+    
+    /**
      * 
      * @param type $user
      * @returns an array with all the data in from DB table.
@@ -137,32 +154,136 @@ class AddTimeToProjectModel {
     /**
      * 
      * @param type $user
-     * @returns an array, which contains total duration for a particular date.
+     * @returns an array which contains all added years.
      */
-    public function getTotalDurationAndDate($user) {
-        $tableData = $this->getTableData($user);
-        $totalDurationAndDate = [];
+    public function getYears($user) {
+        $allData = $this->db->where('user', $user, '=')
+                ->get('projects_log_time');
+        $allYears = [];
+        $prevYear = NULL;
+        $currentYear;
+
+        foreach ($allData as $tablerow) {
+            $currentYear = $tablerow['date']->format("Y");
+
+            if ($prevYear != NULL) {
+                if ($currentYear === $prevYear) {
+                    continue;
+                }
+            }
+            $prevYear = $currentYear;
+            array_push($allYears, ['year' => $currentYear]);
+        }
+        return $allYears;
+    }
+
+    /**
+     * 
+     * @param type $user
+     * @returns an array which contains all dates for the user. 
+     */
+    public function getDate($user) {
+        $allData = $this->getTableData($user);
         $currentDate;
         $prevDate = NULL;
+        $dates = [];
 
-        foreach ($tableData as $date) {
-            $totalHours = 0;
-            $currentDate = $date['date']->format("Y-m-d");
+        foreach ($allData as $data) {
+            $currentDate = $data['date']->format("Y-m-d");
 
             if ($prevDate != NULL) {
                 if ($currentDate === $prevDate) {
                     continue;
                 }
             }
-            foreach ($tableData as $tableRow) {
-                $time = $tableRow['date']->format("Y-m-d");
 
-                if ($currentDate === $time) {
-                    $totalHours += $tableRow['duration'];
-                }
-            }
             $prevDate = $currentDate;
-            $currentDateTable = ["date" => $currentDate, "duration" => $totalHours];
+            array_push($dates, ['date' => $currentDate]);
+        }
+
+        return $dates;
+    }
+
+    /**
+     * 
+     * @param type $user
+     * @param type $year
+     * @param type $month
+     * @returns number of a given month's days.
+     */
+    public function getNumberOfDays($year, $month) {
+        $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        return $numberOfDays;
+    }
+    
+
+    /**
+     * 
+     * @param type $user
+     * @param type $year
+     * @param type $month
+     * @returns array which contains dates for selected or current month and year.
+     */
+    public function getCurrentMonth($user, $year, $month) {
+        $dates = $this->getDate($user);
+        $currentMonth = [];
+        $prevValue = NULL;
+        $currentValue;
+        $dateFormat;
+        $dbDate;
+
+        $numberOfDays = $this->getNumberOfDays($year, $month);
+        $i = $numberOfDays;
+        for ($i; $i > 0; $i--) {
+            $day = $i;
+            $yearAndMonth = $year . '-' . $month . '-' . $day;
+            $dateFormat = date('Y-m-d', strtotime($yearAndMonth));
+
+            foreach ($dates as $row) {
+                $dbDate = $row['date'];
+
+                if ($dbDate !== $dateFormat) {
+                    continue;
+                }
+                $currentValue = $dbDate;
+
+                if ($prevValue !== NULL) {
+                    if ($currentValue == $prevValue) {
+                        continue;
+                    }
+                    $prevValue = $currentValue;
+                }
+                $arElementDate = $currentValue;
+                array_push($currentMonth, ['date' => $arElementDate]);
+            }
+        }
+        return $currentMonth;
+    }
+
+    /**
+     * 
+     * @param type $user
+     * @returns an array, which contains total duration for a particular date.
+     */
+    public function getTotalDurationAndDate($user, $year, $month) {
+        $tableData = $this->getTableData($user);
+        $totalDurationAndDate = [];
+        $currentMonth = $this->getCurrentMonth($user, $year, $month);
+
+        foreach ($currentMonth as $rowMonth) {
+            $currMonth = $rowMonth['date'];
+            $totalHours = 0;
+
+            foreach ($tableData as $date) {
+                $currentDate = $date['date']->format("Y-m-d");
+                $duration = $date['duration'];
+
+                if ($currMonth !== $currentDate) {
+                    continue;
+                }
+                $totalHours += $duration;
+                $currentDateTable = ["date" => $currentDate, "duration" => $totalHours];
+            }
             array_push($totalDurationAndDate, $currentDateTable);
         }
         return $totalDurationAndDate;
@@ -413,97 +534,38 @@ class AddTimeToProjectModel {
                 ->where('id', $id)
                 ->update('projects_log_time', $data);
     }
-
-    /**
-     * 
-     * @param type $user
-     * @returns an array which contains all added years.
-     */
-    public function getYears($user) {
-        $allData = $this->db->where('user', $user, '=')
-                ->get('projects_log_time');
-        $allYears = [];
-        $prevYear = NULL;
-        $currentYear;
-
-        foreach ($allData as $tablerow) {
-            $currentYear = $tablerow['date']->format("Y");
-
-            if ($prevYear != NULL) {
-                if ($currentYear === $prevYear) {
-                    continue;
-                }
-            }
-            $prevYear = $currentYear;
-            array_push($allYears, ['year' => $currentYear]);
-        }
-        return $allYears;
-    }
-    /**
-     * 
-     * @param type $user
-     * @returns an array which contains all dates for the user. 
-     */
-    public function getDate($user) {
-        $allData = $this->getTableData($user);
-        $currentDate;
-        $prevDate = NULL;
-        $dates = [];
-
-        foreach ($allData as $data) {
-            $currentDate = $data['date']->format("Y-m-d");
-
-            if ($prevDate != NULL) {
-                if ($currentDate === $prevDate) {
-                    continue;
-                }
-            }
-
-            $prevDate = $currentDate;
-            array_push($dates, ['date' => $currentDate]);
-        }
-
-        return $dates;
-    }
     
-    /**
-     * 
-     * @param type $user
-     * @param type $year
-     * @param type $month
-     * @returns array which contains dates for selected or current month and year.
-     */
-    public function getCurrentMonth($user, $year, $month) {
-        $dates = $this->getDate($user);
-        $currentMonth = [];
-        $prevValue = NULL;
-        $currentValue;
-        $dateFormat;
-        $dbDate;
-        
-        for ($i = 31; $i >= 1; $i--) {
-            $day = $i;
-            $yearAndMonth = $year . '-' . $month . '-' . $day;
-            $dateFormat = date('Y-m-d', strtotime($yearAndMonth));
+//    public function checkUsersDuration(){
+//        $allData = $this->db->get('projects_log_time');
+//        
+//        $currentMonth = date('m');
+//        $currentYear = date('Y');
+//        $userDurationTable = [];
+//        $user;
+//        $numberOfDays = $this->getNumberOfDays($currentYear, $currentMonth);
+//        
+//        foreach($allData as $arr){
+//           $currentDate = date('Y-m-d');
+//           $dateDb = $arr['date']->format('Y-m-d');
+//           $userDb = $arr['user'];
+//            
+//           if(!$currentDate == $dateDb){
+//               continue;
+//           }
+//          $user = $userDb;
+//         
+//           array_push($userDurationTable, ["user"=>$userDb, "date" => $dateDb]);
+//           
+////           echo"<pre>";
+////           var_dump($userDuration);
+////           die;
+//           
+//            
+//        };
+//        
+//        return $userDurationTable;
+//    }
+    
+    
 
-            foreach ($dates as $row) {
-                $dbDate = $row['date'];
-
-                if ($dbDate !== $dateFormat) {
-                    continue;
-                }
-                $currentValue = $dbDate;
-
-                if ($prevValue !== NULL) {
-                    if ($currentValue == $prevValue) {
-                        continue;
-                    }
-                    $prevValue = $currentValue;
-                }
-                $arElementDate = $currentValue;
-                array_push($currentMonth, ['date' => $arElementDate]);
-            }
-        }
-        return $currentMonth;
-    }
 }
