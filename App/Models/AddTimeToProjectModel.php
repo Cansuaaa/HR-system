@@ -134,13 +134,12 @@ class AddTimeToProjectModel {
         $tableData = $this->db->where('user', $user, '=', 'allow filtering')->get('projects_log_time');
 //        var_dump($tableData);
 //        die;
-        if($tableData == NULL){
+        if ($tableData == NULL) {
             return FALSE;
         }
         return TRUE;
     }
-    
-    
+
     /**
      * 
      * @param type $user
@@ -196,11 +195,9 @@ class AddTimeToProjectModel {
                     continue;
                 }
             }
-
             $prevDate = $currentDate;
             array_push($dates, ['date' => $currentDate]);
         }
-
         return $dates;
     }
 
@@ -215,7 +212,6 @@ class AddTimeToProjectModel {
         $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
         return $numberOfDays;
     }
-    
 
     /**
      * 
@@ -231,7 +227,6 @@ class AddTimeToProjectModel {
         $currentValue;
         $dateFormat;
         $dbDate;
-
         $numberOfDays = $this->getNumberOfDays($year, $month);
         $i = $numberOfDays;
         for ($i; $i > 0; $i--) {
@@ -297,7 +292,6 @@ class AddTimeToProjectModel {
      */
     public function getDateDetails($user, $date) {
         $timeZone = $date . '+0000';
-
         $allData = $this->db->where('user', $user, '=')
                 ->where('date', $timeZone, '=')
                 ->get('projects_log_time');
@@ -348,7 +342,7 @@ class AddTimeToProjectModel {
         $allData = $this->db->where('user', $user, '=')
                 ->where('date', $timeZone, '=')
                 ->get('projects_log_time');
-
+        
         if (isset($allData) == true) {
             return true;
         }
@@ -419,7 +413,6 @@ class AddTimeToProjectModel {
                 ->get('projects_log_time');
 
         foreach ($dataById as $currentRow) {
-
             $dbDuration = $currentRow['duration'];
         }
         $differenceOfDurationDB = $dbTotalDuration - $dbDuration;
@@ -467,8 +460,8 @@ class AddTimeToProjectModel {
         $data = $this->db->where('user', $user, '=')
                 ->where('date', $date, '=')
                 ->get('projects_log_time');
-
         $idAndDuration = [];
+        
         foreach ($data as $arr) {
             $projectNameDb = $arr['project_name'];
 
@@ -503,7 +496,7 @@ class AddTimeToProjectModel {
     }
 
     /**
-     * Adds hours to the sum of the duration from DB for particular date and project.
+     * Adds hours to the sum of the duration from DB for a particular date and project.
      * 
      * @param type $user
      * @param type $dateForm
@@ -514,9 +507,8 @@ class AddTimeToProjectModel {
         $date = str_replace('/', '-', $dateForm);
         $dateFormat = date('Y-m-d', strtotime($date));
         $dateDb = $dateFormat . '+0000';
-
         $id = $this->getId($user, $dateDb, $projectNameForm);
-
+        
         $dataDb = $this->db->where('user', $user)
                 ->where('date', $dateDb)
                 ->where('id', $id)
@@ -535,37 +527,57 @@ class AddTimeToProjectModel {
                 ->update('projects_log_time', $data);
     }
     
-//    public function checkUsersDuration(){
-//        $allData = $this->db->get('projects_log_time');
-//        
-//        $currentMonth = date('m');
-//        $currentYear = date('Y');
-//        $userDurationTable = [];
-//        $user;
-//        $numberOfDays = $this->getNumberOfDays($currentYear, $currentMonth);
-//        
-//        foreach($allData as $arr){
-//           $currentDate = date('Y-m-d');
-//           $dateDb = $arr['date']->format('Y-m-d');
-//           $userDb = $arr['user'];
-//            
-//           if(!$currentDate == $dateDb){
-//               continue;
-//           }
-//          $user = $userDb;
-//         
-//           array_push($userDurationTable, ["user"=>$userDb, "date" => $dateDb]);
-//           
-////           echo"<pre>";
-////           var_dump($userDuration);
-////           die;
-//           
-//            
-//        };
-//        
-//        return $userDurationTable;
-//    }
-    
-    
+    /**
+     * 
+     * @returns array which contains users.
+     */
+    public function getUsers() {
+        $allData = $this->db->get('projects_log_time');
+        $usersDb = [];
+        $prevUser = NULL;
+        $currentUser;
 
+        foreach ($allData as $arr) {
+            $currentUser = $arr['user'];
+
+            if ($prevUser !== NULL) {
+                if ($prevUser == $currentUser) {
+                    continue;
+                }
+            }
+            $prevUser = $currentUser;
+            array_push($usersDb, ["user" => $currentUser]);
+        };
+        return $usersDb;
+    }
+    
+    /**
+     * 
+     * @returns an array which contains user, date and duration for this date which is less than 8 hours.
+     */
+    public function checksUsersDuration() {
+        $currentMonth = date('m');
+        $currentYear = date('Y');
+        $usersDuration = [];
+        $usersDb = $this->getUsers();
+
+        foreach ($usersDb as $usersRow) {
+            $arrDuration;
+            $user = $usersRow['user'];
+            $TotalDurationAndDate = $this->getTotalDurationAndDate($user, $currentYear, $currentMonth);
+
+            foreach ($TotalDurationAndDate as $row) {
+                $date = $row['date'];
+                $duration = $row['duration'];
+
+                if ($duration > 7) {
+                    continue;
+                }
+                $arrDuration = $duration;
+                array_push($usersDuration, ["user" => $user, "date" => $date, "duration" => $duration]);
+            }
+        }
+        return $usersDuration;
+    }
 }
+

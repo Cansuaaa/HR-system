@@ -31,14 +31,9 @@ class AddTimeToProjectController extends Controller {
 
         $addTimeToProjectModel = new AddTimeToProjectModel();
         $userData = $addTimeToProjectModel->checkUserData($user);
-
-        $userDuration= $addTimeToProjectModel->checkUsersDuration();
-        echo"<pre>";
-        var_dump($userDuration);
-       die; 
         
-        
-        
+        $userDuration= $addTimeToProjectModel->checksUsersDuration();
+         
         if ($userData == False) {
             $data = [
                 "content" => $projectDetails,
@@ -48,49 +43,24 @@ class AddTimeToProjectController extends Controller {
             ];
         } else {
             
-
-//        $date = "08/04/2013";
-//        $id; //= "d09d19a9-5196-4651-a307-32bf8c61e408";
-//        $duration = 5;
-//        $projectName = "HR System";
             $year = '2016';
-            $month = '02';
+            $month = '10';
             
-            $current = $addTimeToProjectModel->getNumberOfDays($year, $month);
-//            echo"<pre>";
-//            var_dump($current);
-//            die;
-            
-             $currentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
-//             echo"<pre>";
-//            var_dump($currentMonth);
-//            die;
-            
+           //$currentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month); 
+           
             $years = $addTimeToProjectModel->getYears($user);
+            
             $totalDurationAndDate = $addTimeToProjectModel->getTotalDurationAndDate($user, $year, $month);
-
-//        $currentMonth = $addTimeToProjectModel->getCurrentMonth($user, $year, $month);
-//        $NumberOfDays = $addTimeToProjectModel->getNumberOfDays($user, $year, $month);
-//        var_dump($NumberOfDays);
-//        echo"<pre>";
-//        var_dump($currentMonth);
-//        die;
-//       
-//        echo'<pre>';
-//        var_dump($months);
-//        die;
-//        $checkProjectAndDate = $addTimeToProjectModel->checkProjectAndDate($user, $date, $projectName);
-//        $isIdAdded = $addTimeToProjectModel->isIdAdded($user, $date, $id);
-//       
+       
 //     // Updates Date's details
 //        $editDateDetail = $addTimeToProjectModel->editDateDetail($user, $date, $id, $duration, $projectName);
 //        
 //     // Deletes details for a particular date
 //         $deleteDateDetail = $addTimeToProjectModel->deleteDateDetail($user, $date, $id);
-//         
+         
 //     //Deletes Date and it's all details 
 //        $deleteDate = $addTimeToProjectModel->deleteSelectedtDate($user, $date);
-//        
+     
 //     // small table date's details
 //        $dateDetails = $addTimeToProjectModel->getDateDetails($user, $date);
 
@@ -152,9 +122,9 @@ class AddTimeToProjectController extends Controller {
             $error = 'The date format is not valid!';
         }
 
-//        if (!$dateCheck == true) {
-//            $error = 'Future dates or empty date field aren\'t allowed!';
-//        }
+        if (!$dateCheck == true) {
+            $error = 'Future dates or empty date field aren\'t allowed!';
+        }
 
         if (!$isDateAdded == true) {
 
@@ -263,6 +233,14 @@ class AddTimeToProjectController extends Controller {
         }
     }
 
+    
+    
+    
+    
+    
+    
+    
+  
     /**
      * @Route('/ajax/projectslogtime/GetInfo')
      * @Name('ajaxProjectsLogtimeGetInfo.index')
@@ -281,5 +259,10 @@ class AddTimeToProjectController extends Controller {
 
         echo json_encode($data);
     }
+    
+    
+    
+    
+    
 
 }
